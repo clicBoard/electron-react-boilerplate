@@ -11,10 +11,13 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import { communicator } from './communicator';
+
+const ipc = ipcMain;
 
 export default class AppUpdater {
   constructor() {
@@ -68,9 +71,12 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
+    transparent: true,
+    frame: false,
+    titleBarStyle: 'hiddenInset',
+    width: 800,
+    height: 550,
+    minWidth: 300,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -78,6 +84,12 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+  communicator(ipcMain);
+
+  ipc.on('closeApp', () => {
+    console.log('Clickeed');
+  });
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

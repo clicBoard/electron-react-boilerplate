@@ -18,7 +18,7 @@ const Hello = () => {
 
       <div className="Sidebar">
         <svg
-          id="menuitem1"
+          id="clipboard"
           width="70"
           height="100"
           viewBox="0 0 70 100"
@@ -31,7 +31,7 @@ const Hello = () => {
           <path d="M53.7695 4.78908H42.9089C41.723 1.98146 38.8862 0 35.5834 0H34.4175C31.1149 0 28.2779 1.98146 27.092 4.78908H16.2314V17.8303H53.7695V4.78908Z" />
         </svg>
         <svg
-          id="menuitem2"
+          id="settings"
           width="75"
           height="78"
           viewBox="0 0 75 78"
@@ -42,7 +42,7 @@ const Hello = () => {
         </svg>
       </div>
 
-      <div className="contentContainer">
+      <div className="mainContainer">
         <div className="headContent">
           <h1>Hello</h1>
         </div>

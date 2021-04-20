@@ -11,13 +11,14 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, clipboard } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { communicator } from './communicator';
+// import { communicator } from './communicator';
 
 const clipboardListener = require('clipboard-event');
+const axios = require('axios');
 
 const ipc = ipcMain;
 
@@ -109,10 +110,45 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
+  const sendClip = async () => {
+    try {
+      // const data = clipboard.readText();
+      const json = { clipboard: clipboard.readText() };
+      // console.log(json);
+      await axios
+        .put('http://192.168.1.191:5000/WeatherForecast?request=', json, {
+          headers: {
+            // Authorization: 'Basic xxxxxxxxxxxxxxxxxxx',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+        })
+        .then((res) => {
+          return null;
+          // Manage incoming response. If loading, then spinning wheel and loading screen. If success then success screen and timed out dismiss. If failure, then capture errors!
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getClip = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.1.191:5000/WeatherForecast'
+      );
+      // console.log('t', response.data);
+      clipboard.writeText(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   clipboardListener.on('change', () => {
-    console.log('Hello');
-    communicator(ipcMain);
+    sendClip();
+    // console.log('Hello');
   });
+
+  setInterval(getClip, 500);
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

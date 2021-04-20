@@ -1,24 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.global.css';
 import { transponder } from './communicator';
 
 const axios = require('axios');
-const clipboardListener = require('clipboard-event');
 
 const Hello = () => {
   transponder(ipcRenderer);
-  useEffect(() => {
-    clipboardListener.startListening();
-    clipboardListener.on('change', () => {
-      alert('Changed');
-    });
-  });
-
-  clipboardListener.on('change', () => {
-    alert('Changed');
-  });
+  useEffect(() => {});
 
   const getClip = async () => {
     try {

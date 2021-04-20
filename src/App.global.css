@@ -1,12 +1,13 @@
 body {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 .contentContainer {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: red;
+  background: #f8f8f8;
   width: calc(100% - 80px);
   height: 100%;
   position: fixed;
@@ -27,7 +28,7 @@ body {
   z-index: 2;
 
   -webkit-app-region: drag;
-  background: transparent;
+  background: #f8f8f8;
 }
 
 svg {
@@ -40,9 +41,12 @@ svg {
 
 text {
   /* fill:  #de8356b8; */
-  fill: #f0f0ec;
-  stroke: rgb(40, 40, 40);
-  stroke-width: 0.5px;
+  fill: #ffa439;
+
+  border: 2px solid #801111;
+  text-shadow: 4px 8px 20px rgba(40, 38, 38, 0.25);
+  stroke: rgb(184, 22, 22);
+  stroke-width: 1.1px;
   stroke-linejoin: bevel;
 }
 
@@ -60,10 +64,10 @@ text {
   left: 0%;
   z-index: 2;
 
-  background: #faf9f9;
+  background: #ffffff;
   /* background: transparent; */
-  border-right: 0.2px solid #abababba;
-  /* filter: drop-shadow(0.5px 0px 1px rgba(31, 31, 31, 0.25)); */
+  /* border-right: 0.2px solid #abababba; */
+  filter: drop-shadow(1px 1px 0.5px rgba(103, 100, 100, 0.25));
 }
 
 #menuitem1 {
@@ -79,32 +83,20 @@ text {
 }
 
 .textBox {
-  width: 180px;
-  height: 180px;
+  width: 300px;
+  height: 300px;
   filter: drop-shadow(3px 3px 3px rgba(161, 160, 160, 0.25));
 }
 
-.Content {
+.headContent {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-
-  position: fixed;
-  width: 80%;
-  height: 100%;
-  bottom: 30;
-  right: 0%;
-
-  background: yellow;
-}
-
-.headContent {
   width: 100%;
-  height: 20%;
-  align-self: flex-start;
+  height: 50px;
+
   top: 20px;
-  background-color: black;
   color: white;
 }
 
@@ -115,8 +107,7 @@ text {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 70%;
-  background-color: red;
+  height: 75%;
 }
 
 .footerContent {
@@ -127,6 +118,34 @@ text {
   height: 50px;
   bottom: 0;
   left: 80px;
-  background-color: blue;
   color: white;
+}
+
+/* disable selection */
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+input,
+button,
+textarea,
+:focus {
+  outline: none;
+}
+
+/* disable image and anchor dragging */
+a:not([draggable='true']),
+img:not([draggable='true']) {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+a[href^="http://"],
+a[href^="https://"],
+a[href^="ftp://"]
+{
+  -webkit-user-drag: auto;
+  user-drag: auto;
 }

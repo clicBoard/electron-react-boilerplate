@@ -17,6 +17,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { communicator } from './communicator';
 
+const clipboardListener = require('clipboard-event');
+
 const ipc = ipcMain;
 
 export default class AppUpdater {
@@ -84,9 +86,7 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-  communicator(ipcMain);
-
+  clipboardListener.startListening();
   ipc.on('closeApp', () => {
     console.log('Clickeed');
   });
@@ -107,6 +107,11 @@ const createWindow = async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  clipboardListener.on('change', () => {
+    console.log('Hello');
+    communicator(ipcMain);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -130,6 +135,7 @@ const createWindow = async () => {
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
+  clipboardListener.stopListening();
   if (process.platform !== 'darwin') {
     app.quit();
   }

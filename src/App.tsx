@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import icon from '../assets/icon.svg';
 import './App.global.css';
 import { transponder } from './communicator';
 
+const axios = require('axios');
+const clipboardListener = require('clipboard-event');
+
 const Hello = () => {
   transponder(ipcRenderer);
+  useEffect(() => {
+    clipboardListener.startListening();
+    clipboardListener.on('change', () => {
+      alert('Changed');
+    });
+  });
+
+  clipboardListener.on('change', () => {
+    alert('Changed');
+  });
+
+  const getClip = async () => {
+    try {
+      await axios
+        .get('http://192.168.1.53:5000/WeatherForecast')
+        .then((res) => {
+          alert('console.log');
+          return null;
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -43,14 +68,13 @@ const Hello = () => {
       </div>
 
       <div className="contentContainer">
-        <div className="headContent">
-          <h1>Hello</h1>
-        </div>
+        <div className="headContent" />
         <div className="mainContent">
+          {/* <button onClick={getClip}>Hello</button> */}
           <input
             type="text"
             placeholder="Your clipboard here.."
-            className="clipBox"
+            className="textBox"
           />
         </div>
         <div className="footerContent" />

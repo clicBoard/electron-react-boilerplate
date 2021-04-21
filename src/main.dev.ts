@@ -21,6 +21,7 @@ const clipboardListener = require('clipboard-event');
 const axios = require('axios');
 
 const ipc = ipcMain;
+let currentBatch;
 
 export default class AppUpdater {
   constructor() {
@@ -110,13 +111,33 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
+  function generator() {
+    const ran1 = () =>
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].sort((x, z) => {
+        const ren = Math.random();
+        if (ren === 0.5) return 0;
+        return ren > 0.5 ? 1 : -1;
+      });
+    const ran2 = () =>
+      ran1().sort((x, z) => {
+        const ren = Math.random();
+        if (ren === 0.5) return 0;
+        return ren > 0.5 ? 1 : -1;
+      });
+
+    return Array(6)
+      .fill(null)
+      .map((x) => ran2()[(Math.random() * 9).toFixed()])
+      .join('');
+  }
+
   const sendClip = async () => {
     try {
-      // const data = clipboard.readText();
-      const json = { clipboard: clipboard.readText() };
-      // console.log(json);
+      currentBatch = generator();
+      const json = { clipboard: clipboard.readText(), batch: currentBatch };
+      console.log('Data', json);
       await axios
-        .put('http://192.168.1.191:5000/WeatherForecast?request=', json, {
+        .put('http://192.168.1.191:5000/Clip', json, {
           headers: {
             // Authorization: 'Basic xxxxxxxxxxxxxxxxxxx',
             'Content-Type': 'application/json; charset=utf-8',
@@ -134,10 +155,23 @@ const createWindow = async () => {
   const getClip = async () => {
     try {
       const response = await axios.get(
-        'http://192.168.1.191:5000/WeatherForecast'
+        'http://192.168.1.191:5000/Clip/GetClip'
       );
-      // console.log('t', response.data);
-      clipboard.writeText(response.data);
+      currentBatch = response.data.batch;
+      clipboard.writeText(response.data.clipboard);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getBatch = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.1.191:5000/Clip/GetBatch'
+      );
+      if (!response.data === currentBatch) {
+        getClip();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +182,7 @@ const createWindow = async () => {
     // console.log('Hello');
   });
 
-  setInterval(getClip, 500);
+  setInterval(getBatch, 300);
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

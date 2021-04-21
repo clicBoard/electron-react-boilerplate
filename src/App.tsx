@@ -10,19 +10,6 @@ const Hello = () => {
   transponder(ipcRenderer);
   useEffect(() => {});
 
-  const getClip = async () => {
-    try {
-      await axios
-        .get('http://192.168.1.53:5000/WeatherForecast')
-        .then((res) => {
-          alert('console.log');
-          return null;
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div>
       <div className="Topbar">

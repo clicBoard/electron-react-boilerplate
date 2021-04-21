@@ -159,6 +159,7 @@ const createWindow = async () => {
       );
       currentBatch = response.data.batch;
       clipboard.writeText(response.data.clipboard);
+      console.log('Clipboard: ', response.data.clipboard);
     } catch (error) {
       console.log(error);
     }
@@ -169,20 +170,21 @@ const createWindow = async () => {
       const response = await axios.get(
         'http://192.168.1.191:5000/Clip/GetBatch'
       );
-      if (!response.data === currentBatch) {
-        getClip();
+      console.log('cBatch: ', currentBatch, ' nBatch: ', response.data);
+      if (!response.data || !(response.data === currentBatch)) {
+        setTimeout(getClip, 1000);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  setInterval(getBatch, 300);
+
   clipboardListener.on('change', () => {
     sendClip();
     // console.log('Hello');
   });
-
-  setInterval(getBatch, 300);
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

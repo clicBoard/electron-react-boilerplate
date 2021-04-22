@@ -154,9 +154,7 @@ const createWindow = async () => {
 
   const getClip = async () => {
     try {
-      const response = await axios.get(
-        'http://192.168.1.191:5000/Clip/GetClip'
-      );
+      const response = await axios.get('http://192.168.1.53:5000/Clip/GetClip');
       currentBatch = response.data.batch;
       clipboard.writeText(response.data.clipboard);
       console.log('Clipboard: ', response.data.clipboard);
@@ -168,18 +166,18 @@ const createWindow = async () => {
   const getBatch = async () => {
     try {
       const response = await axios.get(
-        'http://192.168.1.191:5000/Clip/GetBatch'
+        'http://192.168.1.53:5000/Clip/GetBatch'
       );
       console.log('cBatch: ', currentBatch, ' nBatch: ', response.data);
       if (!response.data || !(response.data === currentBatch)) {
-        setTimeout(getClip, 1000);
+        await getClip();
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  setInterval(getBatch, 300);
+  setInterval(getBatch, 500); // Loop backend to check for new clipboards
 
   clipboardListener.on('change', () => {
     sendClip();

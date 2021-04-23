@@ -1,3 +1,5 @@
+import { clipboard } from 'electron';
+
 const axios = require('axios');
 
 let currentBatch;
@@ -35,6 +37,7 @@ export const sendClip = async () => {
         },
       })
       .then((res) => {
+        console.log('Hello');
         return null;
         // Manage incoming response. If loading, then spinning wheel and loading screen. If success then success screen and timed out dismiss. If failure, then capture errors!
       });
@@ -46,9 +49,9 @@ export const sendClip = async () => {
 export const getClip = async () => {
   try {
     const response = await axios.get('http://192.168.1.191:5000/Clip/GetClip');
-    currentBatch = response.data.batch;
     clipboard.writeText(response.data.clipboard);
-    console.log('Clipboard: ', response.data.clipboard);
+    currentBatch = response.data.batch;
+    console.log('getClip: ', response.data.clipboard);
   } catch (error) {
     console.log(error);
   }
@@ -58,7 +61,7 @@ export const getBatch = async () => {
   try {
     const response = await axios.get('http://192.168.1.191:5000/Clip/GetBatch');
     console.log('cBatch: ', currentBatch, ' nBatch: ', response.data);
-    if (!response.data || !(response.data === currentBatch)) {
+    if (!(currentBatch === response.data)) {
       await getClip();
     }
   } catch (error) {

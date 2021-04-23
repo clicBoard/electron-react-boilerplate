@@ -18,7 +18,7 @@ import MenuBuilder from './menu';
 import { communicator } from './communicator';
 import * as APICalls from './Logic/APICalls';
 
-const clipboardListener = require('clipboard-event');
+const clipboardListener = require('clicboardhelper');
 const axios = require('axios');
 
 const ipc = ipcMain;

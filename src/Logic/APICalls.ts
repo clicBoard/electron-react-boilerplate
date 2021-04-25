@@ -2,7 +2,7 @@ import { clipboard } from 'electron';
 
 const axios = require('axios');
 
-let currentBatch;
+let currentBatch: number;
 
 export function generator() {
   const ran1 = () =>
@@ -24,47 +24,69 @@ export function generator() {
     .join('');
 }
 
+// const randomInt = (min: number, max: number): number => {
+//   // return Math.floor(Math.random() * (max - min + 1) + min);
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// };
+
 export const sendClip = async () => {
   try {
-    currentBatch = generator();
-    const json = { clipboard: clipboard.readText(), batch: currentBatch };
-    console.log('Data', json);
+    const randomInt = generator();
+    const json = { clipboard: clipboard.readText(), batch: randomInt };
+    console.log('Sending', json);
     await axios
-      .put('http://192.168.1.191:5000/Clip', json, {
+      .put('http://192.168.1.53:5000/Clip', json, {
         headers: {
           // Authorization: 'Basic xxxxxxxxxxxxxxxxxxx',
           'Content-Type': 'application/json; charset=utf-8',
         },
       })
-      .then((res) => {
-        console.log('Hello');
+      .then((res: any) => {
+        currentBatch = Number(randomInt);
         return null;
         // Manage incoming response. If loading, then spinning wheel and loading screen. If success then success screen and timed out dismiss. If failure, then capture errors!
       });
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
   }
 };
 
 export const getClip = async () => {
   try {
-    const response = await axios.get('http://192.168.1.191:5000/Clip/GetClip');
+    const response = await axios.get('http://192.168.1.53:5000/Clip/GetClip');
     clipboard.writeText(response.data.clipboard);
-    currentBatch = response.data.batch;
+    // const newBatch: number = +response.data.batch;
+    currentBatch = Number(response.data.batch);
+    if (typeof currentBatch === 'number') {
+      console.log('getBatch: Number');
+    } else {
+      console.log('getBatch: Not number');
+    }
     console.log('getClip: ', response.data.clipboard);
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
   }
 };
 
 export const getBatch = async () => {
   try {
-    const response = await axios.get('http://192.168.1.191:5000/Clip/GetBatch');
-    console.log('cBatch: ', currentBatch, ' nBatch: ', response.data);
+    const response = await axios.get('http://192.168.1.53:5000/Clip/GetBatch');
+    // console.log('cBatch: ', currentBatch, ' nBatch: ', response.data);
     if (!(currentBatch === response.data)) {
       await getClip();
     }
+    // if (typeof response.data === 'number') {
+    //   console.log('getBatch: Number');
+    // } else {
+    //   console.log('getBatch: Not number');
+    // }
+
+    // if (typeof currentBatch === 'number') {
+    //   console.log('Current: Number');
+    // } else {
+    //   console.log('Current: Not number');
+    // }
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
   }
 };

@@ -3358,9 +3358,10 @@ cli-truncate@^2.1.0:
     slice-ansi "^3.0.0"
     string-width "^4.2.0"
 
-"clicboardhelper@git+https://crystalii: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@github.com/crystalii/clicboardhelper.git":
-  version "1.5.1"
-  resolved "git+https://crystalii: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@github.com/crystalii/clicboardhelper.git#c65fda3d623385af41c8c78042f7096efabb6c81"
+clipboard-event@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/clipboard-event/-/clipboard-event-1.5.0.tgz#1a92b970255acf4b36246fb3c3425dd8959f41c2"
+  integrity sha512-ouAjoa6l85h9+SpHQmpIUTAM0x9GFpGXtA9pE4hXA0LapAQFYT6jILAUuvFGEthTMF4T/B0MI/zvscWmy1OxrQ==
 
 cliui@^5.0.0:
   version "5.0.0"

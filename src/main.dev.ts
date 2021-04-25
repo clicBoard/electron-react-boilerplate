@@ -8,17 +8,18 @@
  * When running `yarn build` or `yarn build:main`, this file is compiled to
  * `./src/main.prod.js` using webpack. This gives us some performance wins.
  */
+import { app, BrowserWindow, shell, ipcMain, clipboard } from 'electron';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, clipboard } from 'electron';
+
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { communicator } from './communicator';
 import * as APICalls from './Logic/APICalls';
 
-const clipboardListener = require('clicboardhelper');
+const clipboardListener = require('clipboard-event');
 const axios = require('axios');
 
 const ipc = ipcMain;
